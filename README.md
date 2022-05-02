@@ -13,7 +13,9 @@ python -m venv <env_name>
 source <env_name>/Scripts/activate
 
 **5. Install all dependencies**
+
 cd backend
+
 pip install -r requirements.txt 
 
 **6. Install Postgres, Create Database in pgAdmin**
