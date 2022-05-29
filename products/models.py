@@ -34,11 +34,11 @@ class Item(models.Model):
     category = models.CharField(max_length=50, choices=category_choices)
     create_at = models.DateTimeField(auto_now_add=True)
 
-# def get_path(instance, filename):
-#     title = instance.item_id.title
-#     item_id = str(instance.item_id)
-#     return f'{title}/{item_id}/{filename}'
+def get_path(instance, filename):
+    title = instance.item_id.title
+    item_id = str(instance.item_id)
+    return f'{title}/{item_id}/{filename}'
 
-# class ItemImg(models.Model):
-#     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
-#     itemImage = models.ImageField(upload_to=get_path, verbose_name='Image')
+class ItemImg(models.Model):
+    item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
+    itemImage = models.ImageField(upload_to=get_path, verbose_name='Image')

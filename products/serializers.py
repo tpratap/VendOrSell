@@ -1,5 +1,5 @@
 from pyexpat import model
-from products.models import Item
+from products.models import Item, ItemImg
 from rest_framework import serializers
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -9,7 +9,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 
-# class ItemImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ItemImg
-#         fields = ('id', 'item_id', 'itemImage')
+class ItemImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ItemImg
+        fields = ('id', 'item_id', 'itemImage')

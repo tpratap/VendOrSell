@@ -34,29 +34,3 @@ python manage.py migrate
 
 python manage.py runserver
 
-**API End Points**
-
-    admin/
-    signup/ [name='authemail-signup']
-    signup<drf_format_suffix:format> [name='authemail-signup']
-    signup/verify/ [name='authemail-signup-verify']
-    signup/verify<drf_format_suffix:format> [name='authemail-signup-verify']
-    login/ [name='authemail-login']
-    login<drf_format_suffix:format> [name='authemail-login']
-    logout/ [name='authemail-logout']
-    logout<drf_format_suffix:format> [name='authemail-logout']
-    password/reset/ [name='authemail-password-reset']
-    password/reset<drf_format_suffix:format> [name='authemail-password-reset']
-    password/reset/verify/ [name='authemail-password-reset-verify']
-    password/reset/verify<drf_format_suffix:format> [name='authemail-password-reset-verify']
-    password/reset/verified/ [name='authemail-password-reset-verified']
-    password/reset/verified<drf_format_suffix:format> [name='authemail-password-reset-verified']
-    email/change/ [name='authemail-email-change']
-    email/change<drf_format_suffix:format> [name='authemail-email-change']
-    email/change/verify/ [name='authemail-email-change-verify']
-    email/change/verify<drf_format_suffix:format> [name='authemail-email-change-verify']
-    password/change/ [name='authemail-password-change']
-    password/change<drf_format_suffix:format> [name='authemail-password-change']
-    users/me/ [name='authemail-me']
-    users/me<drf_format_suffix:format> [name='authemail-me']
-
