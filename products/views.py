@@ -1,5 +1,6 @@
 from email.mime import image
 import imp
+from queue import Empty
 from django.shortcuts import render
 from datetime import date
 
@@ -15,6 +16,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework import filters
 from rest_framework.mixins import DestroyModelMixin
 from . import serializers
 from .models import Item, ItemImg
@@ -177,11 +179,70 @@ class deleteItemImages(APIView):
             itemImages = ItemImg.objects.filter(item_id = item_id)
             item = Item.objects.filter(item_id=item_id)
             if str(seller_id) == str(item.seller_id):
+                serializer = self.serializer_class(itemImages, many = True)
                 itemImages.delete()
-                return Response({}, status=status.HTTP_200_OK)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 content = {'detail': _('Seller_id not matched')}
                 return Response(content, status=status.HTTP_401_UNAUTHORIZED)
         except:
             content = {'detail': _('Id not available')}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+class deleteItemImage(APIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ItemImageSerializer
+    def delete(self, request, id, format=None):
+        try:
+            seller_id = request.query_params["seller_id"]
+            itemImage = ItemImg.objects.get(id = id)
+            item = Item.objects.get(item_id=itemImage.item_id)
+            if str(seller_id) == str(item.seller_id):
+                serializer = self.serializer_class(itemImage)
+                itemImage.delete()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                content = {'detail': _('Seller_id not matched')}
+                return Response(content, status=status.HTTP_401_UNAUTHORIZED)
+        except:
+            content = {'detail': _('Id not available')}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ItemList_filters(APIView):
+    permission_classes = (AllowAny,)
+    serializer_class = serializers.ItemSerializer
+    def get(self, request, format=None):
+        try:
+            minprice = request.query_params.get("minprice")
+            item = Item.objects.all()
+            title = request.query_params.get("title")
+            if title is not None:
+                item = item.objects.filter(title__search = title)
+            desc = request.query_params.get("desc")
+            if desc is not None:
+                item = item.objects.filter(desc__search = desc)
+            if minprice is not None:
+                item = item.filter(price__gte=minprice)
+            maxprice = request.query_params.get("maxprice")
+            if maxprice is not None:
+                item = item.filter(price__lte=maxprice)
+            category = request.query_params.get("category")
+            if maxprice is not None:
+                item = item.filter(category = category)
+            price_order = request.query_params.get("price_order")
+            if price_order is not None:
+                item = item.order_by("price")
+                if price_order == False:
+                    item = item.reverse()
+            paginator = PageNumberPagination()
+            result_page = paginator.paginate_queryset(item, request)
+            if result_page is not None and item.exists():
+                serializer = self.serializer_class(result_page, many=True)
+                return paginator.get_paginated_response(serializer.data)
+            else:
+                content = {'detail': _('Data Not Found')}
+                return Response(content, status=status.HTTP_404_NOT_FOUND)
+        except:
+            content = {'detail': _('Invalid query or page does not exist')}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
