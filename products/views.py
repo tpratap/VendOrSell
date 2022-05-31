@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, UpdateAPIView, CreateAPIView
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework import filters
+# from rest_framework import filters
 from rest_framework.mixins import DestroyModelMixin
 from . import serializers
 from .models import Item, ItemImg
@@ -214,21 +214,21 @@ class ItemList_filters(APIView):
     serializer_class = serializers.ItemSerializer
     def get(self, request, format=None):
         try:
-            minprice = request.query_params.get("minprice")
             item = Item.objects.all()
-            title = request.query_params.get("title")
-            if title is not None:
-                item = item.objects.filter(title__search = title)
-            desc = request.query_params.get("desc")
-            if desc is not None:
-                item = item.objects.filter(desc__search = desc)
+            # title = request.query_params.get("title")
+            # if title is not None:
+            #     item = item.objects.filter(title__search = title)
+            # desc = request.query_params.get("desc")
+            # if desc is not None:
+            #     item = item.objects.filter(desc__search = desc)
+            minprice = request.query_params.get("minprice")
             if minprice is not None:
                 item = item.filter(price__gte=minprice)
             maxprice = request.query_params.get("maxprice")
             if maxprice is not None:
                 item = item.filter(price__lte=maxprice)
             category = request.query_params.get("category")
-            if maxprice is not None:
+            if category is not None:
                 item = item.filter(category = category)
             price_order = request.query_params.get("price_order")
             if price_order is not None:
