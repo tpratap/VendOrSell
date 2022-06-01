@@ -208,19 +208,19 @@ class deleteItemImage(APIView):
             content = {'detail': _('Id not available')}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-
+from django.contrib.postgres import search
 class ItemList_filters(APIView):
     permission_classes = (AllowAny,)
     serializer_class = serializers.ItemSerializer
     def get(self, request, format=None):
         try:
             item = Item.objects.all()
-            # title = request.query_params.get("title")
-            # if title is not None:
-            #     item = item.objects.filter(title__search = title)
-            # desc = request.query_params.get("desc")
-            # if desc is not None:
-            #     item = item.objects.filter(desc__search = desc)
+            title = request.query_params.get("title")
+            if title is not None:
+                item = item.filter(title__search = title)
+            desc = request.query_params.get("desc")
+            if desc is not None:
+                item = item.filter(desc__search = desc)
             minprice = request.query_params.get("minprice")
             if minprice is not None:
                 item = item.filter(price__gte=minprice)
