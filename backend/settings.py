@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from msilib.schema import Media
 from pathlib import Path
 import os
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
 	'rest_framework.authtoken',
     'authemail',
 	'accounts',
+    'inventory',
 ]
 
 REST_FRAMEWORK = {
@@ -101,9 +103,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'MyDb',
+        'NAME': 'students',
         'USER' : 'postgres',
-        'PASSWORD': 'Qwerty',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '5432'
     }
@@ -171,3 +173,5 @@ EMAIL_HOST_PASSWORD = 'College@123'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
