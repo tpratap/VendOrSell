@@ -32,6 +32,7 @@ class Item(models.Model):
     sold = models.BooleanField(default=False)
     seller_id = models.UUIDField()
     category = models.CharField(max_length=50, choices=category_choices)
+    bought = models.DateField()
     create_at = models.DateTimeField(auto_now_add=True)
 
 def get_path(instance, filename):
