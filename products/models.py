@@ -29,7 +29,7 @@ class Item(models.Model):
     title = models.CharField(max_length=100)
     desc = RichTextField()
     price = models.IntegerField()
-    featured = CloudinaryField('image')
+    featured = CloudinaryField()
     sold = models.BooleanField(default=False)
     seller_id = models.UUIDField()
     category = models.CharField(max_length=50, choices=category_choices)
@@ -43,4 +43,4 @@ class Item(models.Model):
 
 class ItemImg(models.Model):
     item_id = models.ForeignKey(Item, on_delete=models.CASCADE)
-    itemImage = CloudinaryField('image')
+    itemImage = CloudinaryField()
