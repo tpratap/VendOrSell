@@ -125,9 +125,11 @@ class AddItemImage(CreateAPIView):
     serializer_class = serializers.ItemImageSerializer
     def post(self, request, format=None):
         item_id = request.data.get("item_id")
-        seller_id = request.query_params["seller_id"]
+        seller_id = request.query_params.get("seller_id")
         try:
             item = Item.objects.get(id = item_id)
+            print(item.seller_id)
+            print(seller_id)
             if str(seller_id) == str(item.seller_id):
                 serializer = self.serializer_class(data=request.data)
                 if serializer.is_valid():
@@ -137,9 +139,9 @@ class AddItemImage(CreateAPIView):
                     except:
                         {'detail': _('Cannot Create')}
                         return Response(content, status=status.HTTP_400_BAD_REQUEST)
-                else:
-                    content = {'detail': _('Invalid Data')}
-                    return Response(content, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                content = {'detail': _('Invalid Data')}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
         except:             
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -148,26 +150,26 @@ class getItemImages(APIView):
     serializer_class = serializers.ItemImageSerializer
     def get(self, request, format=None):
         try:
-            item_id = request.query_params["item_id"]
-            item = Item.objects.filter(item_id = item_id)
-            serializer = self.serializer_class(item, many = True)
+            item_id = request.query_params.get("item_id")
+            itemImgs = ItemImg.objects.filter(item_id = item_id)
+            serializer = self.serializer_class(itemImgs, many = True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             content = {'detail': _('Id not available')}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-class getItemImage(APIView):
-    permission_classes = (AllowAny,)
-    serializer_class = serializers.ItemImageSerializer
-    def get(self, request, format=None):
-        try:
-            id = request.query_params["id"]
-            item = Item.objects.filter(id = id)
-            serializer = self.serializer_class(item)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            content = {'detail': _('Id not available')}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+# class getItemImage(APIView):
+#     permission_classes = (AllowAny,)
+#     serializer_class = serializers.ItemImageSerializer
+#     def get(self, request, format=None):
+#         try:
+#             id = request.query_params["id"]
+#             item = Item.objects.filter(id = id)
+#             serializer = self.serializer_class(item)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         except:
+#             content = {'detail': _('Id not available')}
+#             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
 class deleteItemImages(APIView):
@@ -194,7 +196,7 @@ class deleteItemImage(APIView):
     serializer_class = serializers.ItemImageSerializer
     def delete(self, request, id, format=None):
         try:
-            seller_id = request.query_params["seller_id"]
+            seller_id = request.query_params.get("seller_id")
             itemImage = ItemImg.objects.get(id = id)
             item = Item.objects.get(item_id=itemImage.item_id)
             if str(seller_id) == str(item.seller_id):
